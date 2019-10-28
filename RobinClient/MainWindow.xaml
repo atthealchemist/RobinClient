@@ -3,10 +3,32 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RobinClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Robin Client" Height="526" Width="501" MaxWidth="501" MaxHeight="526" ResizeMode="NoResize">
+    <Grid Margin="0,0,0,7" HorizontalAlignment="Left" Width="497">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="465*"/>
+            <RowDefinition Height="32*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox x:Name="groupBoxRequests" Header="Requests" HorizontalAlignment="Left" Height="450" Margin="0,5,0,0" VerticalAlignment="Top" Width="240">
+            <ListView x:Name="listViewRequests" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" Width="auto"/>
+        </GroupBox>
+        <GroupBox x:Name="groupBoxResponses" Header="Responses" HorizontalAlignment="Left" Height="450" Margin="6,5,0,0" VerticalAlignment="Top" Width="240" Grid.Column="1" Grid.ColumnSpan="3">
+            <ListView 
+                x:Name="listViewResponses" 
+                HorizontalAlignment="Stretch" 
+                Height="auto" 
+                VerticalAlignment="Stretch" 
+                Width="auto"
+                ItemsSource="{Binding Path=ResponseList, Mode=TwoWay }"/>
+        </GroupBox>
+        <Button x:Name="buttonSend" Content="Send" Grid.Column="2" Margin="0,5,128,0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" Height="25" Click="ButtonSend_Click" Width="70"/>
+        <TextBox x:Name="textBoxValue" Width="auto" Height="23" Margin="98,7,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Label x:Name="label" Content="Enter value" HorizontalAlignment="Left" Margin="10,7,0,0" Grid.Row="1" VerticalAlignment="Top" Height="23"/>
     </Grid>
 </Window>
