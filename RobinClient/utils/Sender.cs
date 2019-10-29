@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using WebSocketSharp;
+using System.Collections.Generic;
+
+using WebSocket4Net;
 
 namespace RobinClient.utils
 {
@@ -11,36 +11,31 @@ namespace RobinClient.utils
 
         public Action<string> OnResult;
 
-        private string url;
-
         public Sender(string url)
         {
-            this.url = url;
-            client = new WebSocket(this.url);
-            client.Log.Level = LogLevel.Fatal;
+            client = new WebSocket(url);
+
+            client.Opened += (sender, e) => Console.WriteLine("ws opened");
+            client.Error += (sender, e) => Console.WriteLine($"ws error: {e.Exception}");
+            client.Closed += (sender, e) => Console.WriteLine("ws closed");
+            client.MessageReceived += (sender, e) =>
+            {
+                Console.WriteLine($"ws got: {e.Message}");
+                OnResult(e.Message);
+            };
+        }
+
+        public void Connect()
+        {
+            if (client.State == WebSocketState.Closed || client.State == WebSocketState.None)
+            {
+                client.Open();
+            }
         }
 
         public void Send(string value)
         {
-            client.OnOpen += (_, e) => Console.WriteLine("ws opened");
-            client.OnMessage += (_, e) => OnResult(e.Data);
-            client.OnClose += (_, e) =>
-            {
-                Task.Run(() =>
-                {
-                    while (!client.IsAlive)
-                    {
-                        Task.Delay(1000).Wait();
-                        client.Connect();
-                    }
-                });
-            };
-
-            client.Connect();
-            if (client.IsAlive)
-            {
-                client.Send(value);
-            }
+            client.Send(value);
         }
     }
 }
