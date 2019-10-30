@@ -24,7 +24,7 @@ namespace RobinClient
         private Sender sender;
         private DispatcherTimer timer;
 
-        public ObservableCollection<string> ResponseList { get; set; }
+        public ObservableCollection<Query> ResponseList { get; set; }
 
         private int period = 1;
 
@@ -49,7 +49,7 @@ namespace RobinClient
         {
             InitializeComponent();
             _lock = new object();
-            ResponseList = new ObservableCollection<string>();
+            ResponseList = new ObservableCollection<Query>();
             BindingOperations.EnableCollectionSynchronization(ResponseList, _lock);
 
             timer = new DispatcherTimer();
@@ -68,7 +68,7 @@ namespace RobinClient
             SendValue(TextBoxValue.Text);
         }
 
-        private void ShowResult(string value)
+        private void ShowResult(Query value)
         {
             lock (_lock)
             {

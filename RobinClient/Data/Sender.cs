@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-
+using System.Globalization;
 using WebSocket4Net;
 
 namespace RobinClient.utils
@@ -9,7 +10,7 @@ namespace RobinClient.utils
     {
         private WebSocket client;
 
-        public Action<string> OnResult;
+        public Action<Query> OnResult;
 
         public Sender(string url)
         {
@@ -21,7 +22,8 @@ namespace RobinClient.utils
             client.MessageReceived += (sender, e) =>
             {
                 Console.WriteLine($"ws got: {e.Message}");
-                OnResult(e.Message);
+                var response = JsonConvert.DeserializeObject<Query>(e.Message);
+                OnResult(response);
             };
         }
 
@@ -35,7 +37,13 @@ namespace RobinClient.utils
 
         public void Send(string value)
         {
-            client.Send(value);
+            var query = new Query
+            {
+                Number = decimal.Parse(value, CultureInfo.InvariantCulture),
+                Status = "Idle"
+            };
+            var json = JsonConvert.SerializeObject(query);
+            client.Send(json);
         }
     }
 }
